@@ -1,9 +1,12 @@
+<!DOCTYPE html>
 <html>
+<head>
 <script>
+var URI="https://api.1self.co";
 var logHelloWorld = function (){
 	var xmlhttp = new XMLHttpRequest();
 	if(localStorage.streamid === undefined){
-		xmlhttp.open("POST","https://api.1self.co/v1/streams", false);
+		xmlhttp.open("POST",URI + "/v1/streams", false);
 		xmlhttp.setRequestHeader("Authorization", "1selfnoise:12345678");
 		xmlhttp.send();
 		var response = JSON.parse(xmlhttp.response);
@@ -23,7 +26,7 @@ var logHelloWorld = function (){
                     }
                 };
 
-    xmlhttp.open("POST", "https://api.1self.co/v1/streams/" 
+    xmlhttp.open("POST", URI + "/v1/streams/" 
     					+ localStorage.streamid
     					+ "/events"
     					, false);
@@ -31,7 +34,7 @@ var logHelloWorld = function (){
     xmlhttp.setRequestHeader("Content-Type", "application/json");
     xmlhttp.send(JSON.stringify(helloWorldEvent));
 
-	var visualizationUrl = "https://api.1self.co/v1/streams/" 
+	var visualizationUrl = URI + "/v1/streams/" 
 							+ localStorage.streamid
 							+ "/events/computer,program,helloworld/write/sum(linesofcode)/daily/barchart";
 			
@@ -65,6 +68,7 @@ var logHelloWorld = function (){
 		margin-top: 50px;
 	}
 </style>
+</head>
 <body>
 <div>
 	<h1>Hello, 1self</h1>
