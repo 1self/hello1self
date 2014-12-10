@@ -1,50 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>
-var URI="https://api.1self.co";
-var logHelloWorld = function (){
-	var xmlhttp = new XMLHttpRequest();
-	if(localStorage.streamid === undefined){
-		xmlhttp.open("POST",URI + "/v1/streams", false);
-		xmlhttp.setRequestHeader("Authorization", "1selfnoise:12345678");
-		xmlhttp.send();
-		var response = JSON.parse(xmlhttp.response);
-		localStorage.streamid = response.streamid;
-		localStorage.readtoken = response.readToken;
-		localStorage.writetoken = response.writeToken;
-	}
-
-	var helloWorldEvent = {
-                    "dateTime": new Date().toISOString(),
-                    "source": "Hello, 1self",
-                    "version": "1.0.0",
-                    "objectTags": ["computer", "program", "helloworld"],
-                    "actionTags": ["write"],
-                    "properties": {
-                        "linesofcode": parseInt(document.getElementById('linesofcode').value)
-                    }
-                };
-
-    xmlhttp.open("POST", URI + "/v1/streams/" 
-    					+ localStorage.streamid
-    					+ "/events"
-    					, false);
-    xmlhttp.setRequestHeader("Authorization", localStorage.writetoken);
-    xmlhttp.setRequestHeader("Content-Type", "application/json");
-    xmlhttp.send(JSON.stringify(helloWorldEvent));
-
-	var visualizationUrl = URI + "/v1/streams/" 
-							+ localStorage.streamid
-							+ "/events/computer,program,helloworld/write/sum(linesofcode)/daily/barchart";
-			
-
-	var iframe = document.getElementById("visualization");
-	iframe.src = visualizationUrl;
-
-	
-	}
-</script>
+<script src="js/1self.js"></script>
 <style>
 	input{
 		border: 2px solid grey;
@@ -78,5 +35,32 @@ var logHelloWorld = function (){
 	<iframe id="visualization">
 	</iframe>
 </div>
+<script>
+		var OneSelf = new OneSelf({
+			"appName": 'Hello, 1self',
+			"appVersion": '1.0.0',
+			"appId": "1selfnoise",
+			"appSecret": "12345678"
+		});
+
+		OneSelf.setObjectTags(["computer", "program", "helloworld"]);
+		OneSelf.setActionTags(["write"]);
+
+		var logHelloWorld = function() {
+			OneSelf.registerStream()
+				.then(function(response) {
+					return OneSelf.sendEvent({
+						"linesofcode": parseInt(document.getElementById('linesofcode').value)
+					});
+				})
+				.then(function(response) {
+					var iframe = document.getElementById("visualization");
+					iframe.src = OneSelf.getBarchartURL(OneSelf.TYPE_SUM, 'linesofcode');
+				})
+				.catch(function(error) {
+					console.error(error);
+				});
+		}
+</script>
 </body>
 </html>
