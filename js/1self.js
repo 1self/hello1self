@@ -9,7 +9,7 @@
 }(this, function(context) {
     'use strict';
 
-    var API_ENDPOINT = "http://api-staging.1self.co";
+    var API_ENDPOINT = "https://api.1self.co";
 
     var OneSelf = function(config) {
         this.TYPE_COUNT = 0;
