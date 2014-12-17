@@ -36,31 +36,39 @@
 	</iframe>
 </div>
 <script>
-		var OneSelf = new OneSelf({
-			"appName": 'Hello, 1self',
-			"appVersion": '1.0.0',
-			"appId": "1selfnoise",
-			"appSecret": "12345678"
+	var lib1self = new lib1self({
+		"appName": 'Hello, 1self',
+		"appVersion": '1.0.0',
+		"appId": "1selfnoise",
+		"appSecret": "12345678"
+	});
+
+	var helloWorldObjectTags = ["computer", "program", "helloworld"];
+	var helloWorldActionTags = ["write"];
+
+
+	var logHelloWorld = function() {
+		var event = {
+			objectTags: helloWorldObjectTags,
+			actionTags: helloWorldActionTags,
+			properties: {
+				linesOfCode: parseInt(document.getElementById('linesofcode').value)
+			}
+		};
+
+		lib1self.send(event, function(){
+			var vizUrl = lib1self
+				.objectTags(helloWorldObjectTags)
+				.actionTags(helloWorldActionTags)
+				.sum("linesofcode")
+				.barChart()
+				.url();
+
+			console.log(vizUrl);
+			var iframe = document.getElementById("visualization");
+			iframe.src = vizUrl;
 		});
-
-		OneSelf.setObjectTags(["computer", "program", "helloworld"]);
-		OneSelf.setActionTags(["write"]);
-
-		var logHelloWorld = function() {
-			OneSelf.registerStream()
-				.then(function(response) {
-					return OneSelf.sendEvent({
-						"linesofcode": parseInt(document.getElementById('linesofcode').value)
-					});
-				})
-				.then(function(response) {
-					var iframe = document.getElementById("visualization");
-					iframe.src = OneSelf.getBarchartURL(OneSelf.TYPE_SUM, 'linesofcode');
-				})
-				.catch(function(error) {
-					console.error(error);
-				});
-		}
+	};
 </script>
 </body>
 </html>
