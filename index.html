@@ -1,82 +1,98 @@
 <!DOCTYPE html>
 <html>
-<head>
-<script>
-var URI="https://api.1self.co";
-var logHelloWorld = function (){
-	var xmlhttp = new XMLHttpRequest();
-	if(localStorage.streamid === undefined){
-		xmlhttp.open("POST",URI + "/v1/streams", false);
-		xmlhttp.setRequestHeader("Authorization", "1selfnoise:12345678");
-		xmlhttp.send();
-		var response = JSON.parse(xmlhttp.response);
-		localStorage.streamid = response.streamid;
-		localStorage.readtoken = response.readToken;
-		localStorage.writetoken = response.writeToken;
-	}
+  <head>
+    <script type="text/javascript">
+      var URI="https://api.1self.co";
+      var logHelloWorld = function (){
+          var xmlhttp = new XMLHttpRequest();
+          if(localStorage.streamid === undefined){
+	      xmlhttp.open("POST",URI + "/v1/streams", false);
+	      xmlhttp.setRequestHeader("Authorization", "1selfnoise:12345678");
+	      xmlhttp.send();
+	      var response = JSON.parse(xmlhttp.response);
+	      localStorage.streamid = response.streamid;
+	      localStorage.readtoken = response.readToken;
+	      localStorage.writetoken = response.writeToken;
+          }
 
-	var helloWorldEvent = {
-                    "dateTime": new Date().toISOString(),
-                    "source": "Hello, 1self",
-                    "version": "1.0.0",
-                    "objectTags": ["computer", "program", "helloworld"],
-                    "actionTags": ["write"],
-                    "properties": {
-                        "linesofcode": parseInt(document.getElementById('linesofcode').value)
-                    }
-                };
+          var helloWorldEvent = {
+              "dateTime": new Date().toISOString(),
+              "source": "Hello, 1self",
+              "version": "1.0.0",
+              "objectTags": ["computer", "program", "helloworld"],
+              "actionTags": ["write"],
+              "properties": {
+                  "linesofcode": parseInt(document.getElementById('linesofcode').value)
+              }
+          };
 
-    xmlhttp.open("POST", URI + "/v1/streams/" 
-    					+ localStorage.streamid
-    					+ "/events"
-    					, false);
-    xmlhttp.setRequestHeader("Authorization", localStorage.writetoken);
-    xmlhttp.setRequestHeader("Content-Type", "application/json");
-    xmlhttp.send(JSON.stringify(helloWorldEvent));
+          xmlhttp.open("POST", URI + "/v1/streams/" 
+    		       + localStorage.streamid
+    		       + "/events"
+    		       , false);
+          xmlhttp.setRequestHeader("Authorization", localStorage.writetoken);
+          xmlhttp.setRequestHeader("Content-Type", "application/json");
+          xmlhttp.send(JSON.stringify(helloWorldEvent));
 
-	var visualizationUrl = URI + "/v1/streams/" 
-							+ localStorage.streamid
-							+ "/events/computer,program,helloworld/write/sum(linesofcode)/daily/barchart";
-			
+          var visualizationUrl = URI + "/v1/streams/" 
+	      + localStorage.streamid
+	      + "/events/computer,program,helloworld/write/sum(linesofcode)/daily/barchart";
+          
 
-	var iframe = document.getElementById("visualization");
-	iframe.src = visualizationUrl;
+          var iframe = document.getElementById("visualization");
+          iframe.src = visualizationUrl;
 
-	
-	}
-</script>
-<style>
-	input{
-		border: 2px solid grey;
-		border-radius: 8px;
-		height: 30px;
-		width: 200px;
-	}
+          
+      };
 
-	h1{
-		margin-top: 100px;
-		font-family: helvetica
-	}
+      function getLocation() {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+              console.log("Geolocation is not supported by this browser.");
+          }
+      }
 
-	div{
-		text-align: center;
-	}
+      function showPosition(position) {
+          window.latitude = position.coords.latitude;
+          window.longitude = position.coords.longitude;
+      }
 
-	iframe{
-		width: 320;
-		height: 568;
-		margin-top: 50px;
-	}
-</style>
-</head>
-<body>
-<div>
-	<h1>Hello, 1self</h1>
-	<input id="linesofcode" type="number" value="lines of hello, world code">
-	<input type="button" value="log" onclick="logHelloWorld()">
-	<div></div>
-	<iframe id="visualization">
-	</iframe>
-</div>
-</body>
+      window.addEventListener('load', getLocation, false)
+
+    </script>
+    <style type="text/css">
+      input{
+          border: 2px solid grey;
+          border-radius: 8px;
+          height: 30px;
+          width: 200px;
+      }
+
+      h1{
+          margin-top: 100px;
+          font-family: helvetica
+      }
+
+      div{
+          text-align: center;
+      }
+
+      iframe{
+          width: 320;
+          height: 568;
+          margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Hello, 1self</h1>
+      <input id="linesofcode" type="number" value="lines of hello, world code" />
+      <input type="button" value="log" onclick="logHelloWorld()" />
+      <div></div>
+      <iframe id="visualization">
+      </iframe>
+    </div>
+  </body>
 </html>
