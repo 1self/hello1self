@@ -26,6 +26,13 @@
               }
           };
 
+          if(typeof window.latitude !== 'undefined'){
+              helloWorldEvent["location"] = {
+                  "lat": window.latitude,
+                  "long": window.longitude
+              };
+          }
+          
           xmlhttp.open("POST", URI + "/v1/streams/" 
     		       + localStorage.streamid
     		       + "/events"
@@ -41,7 +48,6 @@
 
           var iframe = document.getElementById("visualization");
           iframe.src = visualizationUrl;
-
           
       };
 
