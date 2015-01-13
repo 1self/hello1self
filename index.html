@@ -1,77 +1,81 @@
 <!DOCTYPE html>
 <html>
-<head>
-<script src="1self.js/src/1self.js"></script>
-<style>
-	input{
-		border: 2px solid grey;
-		border-radius: 8px;
-		height: 30px;
-		width: 200px;
-	}
+  <head>
+    <script src="1self.js/src/1self.js"></script>
+    <style>
+     input{
+       border: 2px solid grey;
+       border-radius: 8px;
+       height: 30px;
+       width: 200px;
+     }
 
-	h1{
-		margin-top: 100px;
-		font-family: helvetica
-	}
+     h1{
+       margin-top: 100px;
+       font-family: helvetica
+     }
 
-	div{
-		text-align: center;
-	}
+     div{
+       text-align: center;
+     }
 
-	iframe{
-		width: 320;
-		height: 568;
-		margin-top: 50px;
-	}
-</style>
-</head>
-<body>
-<div>
-	<h1>Hello, 1self</h1>
-	<input id="linesofcode" type="number" value="lines of hello, world code">
-	<input type="button" value="log" onclick="logHelloWorld()">
-	<div></div>
-	<iframe id="visualization">
-	</iframe>
-</div>
-<script>
-	var lib1self = new lib1self({
-		"appName": 'Hello, 1self',
-		"appVersion": '1.0.0',
-		"appId": "1selfnoise",
-		"appSecret": "12345678"
-	});
+     iframe{
+       width: 320;
+       height: 568;
+       margin-top: 50px;
+     }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Hello, 1self</h1>
+      <input id="linesofcode" type="number" value="lines of hello, world code">
+      <input type="button" value="log" onclick="logHelloWorld()">
+      <div></div>
+      <iframe id="visualization">
+      </iframe>
+    </div>
+    <script>
+     var lib1self = new lib1self({
+       "appName": 'Hello, 1self',
+       "appVersion": '1.0.0',
+       "appId": "1selfnoise",
+       "appSecret": "12345678"
+     });
 
-	var helloWorldObjectTags = ["computer", "program", "helloworld"];
-	var helloWorldActionTags = ["write"];
+     var helloWorldObjectTags = ["computer", "program", "helloworld"];
+     var helloWorldActionTags = ["write"];
 
-
-	var logHelloWorld = function() {
-		var event = {
-			objectTags: helloWorldObjectTags,
-			actionTags: helloWorldActionTags,
-			properties: {
-				linesOfCode: parseInt(document.getElementById('linesofcode').value)
-			}
-		};
-
-		lib1self.registerStream(function(c) {
-			lib1self.sendEvent(event, function() {
-				var vizUrl = lib1self
-					.objectTags(helloWorldObjectTags)
+     var renderVizUrl = function() {       
+       var vizUrl = lib1self
+          .objectTags(helloWorldObjectTags)
 					.actionTags(helloWorldActionTags)
-					.sum("linesOfCode")
-					.barChart()
-					.url();
+         .sum("linesOfCode")
+         .barChart()
+         .url();
 
-				console.log(vizUrl);
-				var iframe = document.getElementById("visualization");
-				iframe.src = vizUrl;
+       console.log(vizUrl);
+       var iframe = document.getElementById("visualization");
+       iframe.src = vizUrl;         
+     };    
 
-			})
-		});
-	};
-</script>
-</body>
+     lib1self.registerStream(function() {
+       renderVizUrl();
+     });
+     
+     var logHelloWorld = function() {
+       var event = {
+         objectTags: helloWorldObjectTags,
+         actionTags: helloWorldActionTags,
+         properties: {
+           linesOfCode: parseInt(document.getElementById('linesofcode').value)
+         }
+       };
+       lib1self.sendEvent(event, function() {
+         renderVizUrl();
+       })
+     };
+     
+    </script>
+  </body>
 </html>
