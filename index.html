@@ -56,17 +56,20 @@
 			}
 		};
 
-		lib1self.send(event, function(){
-			var vizUrl = lib1self
-				.objectTags(helloWorldObjectTags)
-				.actionTags(helloWorldActionTags)
-				.sum("linesOfCode")
-				.barChart()
-				.url();
+		lib1self.registerStream(function(c) {
+			lib1self.sendEvent(event, function() {
+				var vizUrl = lib1self
+					.objectTags(helloWorldObjectTags)
+					.actionTags(helloWorldActionTags)
+					.sum("linesOfCode")
+					.barChart()
+					.url();
 
-			console.log(vizUrl);
-			var iframe = document.getElementById("visualization");
-			iframe.src = vizUrl;
+				console.log(vizUrl);
+				var iframe = document.getElementById("visualization");
+				iframe.src = vizUrl;
+
+			})
 		});
 	};
 </script>
