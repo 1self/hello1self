@@ -37,45 +37,46 @@
     </div>
     <script>
      var lib1self = new lib1self({
-       "appName": 'Hello, 1self',
-       "appVersion": '1.0.0',
-       "appId": "1selfnoise",
-       "appSecret": "12345678"
+     	"appName": 'Hello, 1self',
+     	"appVersion": '1.0.0',
+     	"appId": "1selfnoise",
+     	"appSecret": "12345678"
      });
 
      var helloWorldObjectTags = ["computer", "program", "helloworld"];
      var helloWorldActionTags = ["write"];
 
-     var renderVizUrl = function() {       
-       var vizUrl = lib1self
-          .objectTags(helloWorldObjectTags)
-					.actionTags(helloWorldActionTags)
-         .sum("linesOfCode")
-         .barChart()
-         .url();
+     var renderVizUrl = function() {
+     	var vizUrl = lib1self
+     		.objectTags(helloWorldObjectTags)
+     		.actionTags(helloWorldActionTags)
+     		.sum("linesOfCode")
+     		.barChart()
+     		.url();
 
-       console.log(vizUrl);
-       var iframe = document.getElementById("visualization");
-       iframe.src = vizUrl;         
-     };    
+     	console.log(vizUrl);
+     	var iframe = document.getElementById("visualization");
+     	iframe.src = vizUrl;
+     };
 
      lib1self.registerStream(function() {
-       renderVizUrl();
+     	renderVizUrl();
      });
-     
+
      var logHelloWorld = function() {
-       var event = {
-         objectTags: helloWorldObjectTags,
-         actionTags: helloWorldActionTags,
-         properties: {
-           linesOfCode: parseInt(document.getElementById('linesofcode').value)
-         }
-       };
-       lib1self.sendEvent(event, function() {
-         renderVizUrl();
-       })
+     	var event = {
+     		objectTags: helloWorldObjectTags,
+     		actionTags: helloWorldActionTags,
+     		properties: {
+     			linesOfCode: parseInt(document.getElementById('linesofcode').value)
+     		}
+     	};
+     	lib1self.sendEvent(event, function(sent) {
+     		if (sent) {
+     			renderVizUrl();
+     		}
+     	})
      };
-     
     </script>
   </body>
 </html>
