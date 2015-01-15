@@ -71,10 +71,8 @@
      			linesOfCode: parseInt(document.getElementById('linesofcode').value)
      		}
      	};
-     	lib1self.sendEvent(event, function(sent) {
-     		if (sent) {
+     	lib1self.sendEvent(event, function() {
      			renderVizUrl();
-     		}
      	})
      };
     </script>
