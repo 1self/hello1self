@@ -71,9 +71,12 @@
          }
        };
        var data = JSON.parse(window.localStorage.data);
-       oneself.sendEvent(event, data.writeToken, function() {
-         renderVizUrl();
-       })
+       oneself.onsendsuccess = function(){
+        renderVizUrl();
+      }
+       oneself.sendEvent(event, data.streamid, data.writeToken, function() {
+         
+       });
      };
       
         oneself.registerStream(function(response) {
