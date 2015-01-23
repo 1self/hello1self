@@ -79,7 +79,7 @@
        });
      };
       
-        oneself.registerStream(function(response) {
+        oneself.registerStream(function(err, response) {
           if (response) {
             window.localStorage.data = JSON.stringify(response);
             renderVizUrl();
