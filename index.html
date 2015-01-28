@@ -37,55 +37,55 @@
     </div>
 
     <script>
-     var oneself = new Lib1self({
-       "appName": 'Hello, 1self',
-       "appVersion": '1.0.0',
-       "appId": "app-id-655861289574addd9f742c61a13d3481",
-       "appSecret": "app-secret-dcdb85d020c196434847c057d4cdc6f7db4aac3c1dcbbcaef99a044467cd71a5"
-     }, "production");
+    var helloWorldObjectTags = ["computer", "program", "helloworld"];
+    var helloWorldActionTags = ["write"];
 
-     var helloWorldObjectTags = ["computer", "program", "helloworld"];
-     var helloWorldActionTags = ["write"];
+    var oneself = new Lib1selfClient({
+      "appName": 'Hello, 1self',
+      "appVersion": '1.0.0',
+      "appId": "app-id-655861289574addd9f742c61a13d3481",
+      "appSecret": "app-secret-dcdb85d020c196434847c057d4cdc6f7db4aac3c1dcbbcaef99a044467cd71a5"
+    }, "production");
 
-     var renderVizUrl = function() {
-       var data = JSON.parse(window.localStorage.data);
-       var vizUrl = oneself
-         .visualize(data.streamid, data.readToken)
-         .objectTags(helloWorldObjectTags)
-         .actionTags(helloWorldActionTags)
-         .sum("linesOfCode")
-         .barChart()
-         .url();
+    var renderVizUrl = function(stream) {
+      var vizUrl = oneself
+        .objectTags(helloWorldObjectTags)
+        .actionTags(helloWorldActionTags)
+        .sum("linesOfCode")
+        .barChart()
+        .url(stream);
+      console.log(vizUrl);
+      var iframe = document.getElementById("visualization");
+      iframe.src = vizUrl;
+    };
 
-       console.log(vizUrl);
-       var iframe = document.getElementById("visualization");
-       iframe.src = vizUrl;
-     };
+    var stream;
+    var loadChart = function() {
+      oneself.fetchStream(function(err, response) {
+        if (!err) {
+          stream = response;
+          renderVizUrl(response);
+        }
+      });
+    }
 
-     var logHelloWorld = function() {
-       var event = {
-         objectTags: helloWorldObjectTags,
-         actionTags: helloWorldActionTags,
-         properties: {
-           linesOfCode: parseInt(document.getElementById('linesofcode').value)
-         }
-       };
-       var data = JSON.parse(window.localStorage.data);
-       oneself.onsendsuccess = function(){
-        renderVizUrl();
-      }
-       oneself.sendEvent(event, data.streamid, data.writeToken, function() {
-         
-       });
-     };
-      
-        oneself.registerStream(function(err, response) {
-          if (response) {
-            window.localStorage.data = JSON.stringify(response);
-            renderVizUrl();
-          }
-        });
-      
+    oneself.on('sendsuccess', function() {
+      loadChart();
+    });
+
+    var logHelloWorld = function() {
+      var event = {
+        objectTags: helloWorldObjectTags,
+        actionTags: helloWorldActionTags,
+        properties: {
+          linesOfCode: parseInt(document.getElementById('linesofcode').value)
+        }
+      };
+      oneself.sendEvent(event, stream);
+    };
+
+    loadChart();
+    
     </script>
   </body>
 </html>
